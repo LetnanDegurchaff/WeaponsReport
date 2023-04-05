@@ -28,33 +28,33 @@ namespace WeaponsReport
         public void Work()
         {
             ConsoleOutputMethods.WriteRedText("Полная информация о солдатах");
-            ShowFullSoldierInfo();
+            ShowFullSoldierInfo(_soldiers);
 
             ConsoleOutputMethods.WriteRedText("Краткая информация о солдатах");
-            ShowNamesAndRanks();
+            ShowNamesAndRanks(_soldiers);
         }
 
-        private void ShowFullSoldierInfo()
+        private void ShowFullSoldierInfo(List<Soldier> soldiers)
         {
-            foreach (var soldierInfo in _soldiers)
+            foreach (var soldier in soldiers)
             {
-                Console.WriteLine($"{soldierInfo.FullName}\n" +
-                    $"{soldierInfo.Weapon}\n" +
-                    $"{soldierInfo.Rank}\n" +
-                    $"Месяцев на службе - {soldierInfo.ServiceTerm}\n");
+                Console.WriteLine($"{soldier.FullName}\n" +
+                    $"{soldier.Weapon}\n" +
+                    $"{soldier.Rank}\n" +
+                    $"Месяцев на службе - {soldier.ServiceTerm}\n");
             }
         }
 
-        private void ShowNamesAndRanks()
+        private void ShowNamesAndRanks(List<Soldier> soldiers)
         {
-            var soldiersList = _soldiers
-                .Select(soldier => soldier.FullName + "\n" + soldier.Rank)
-                .ToList();
-
-            foreach (var soldierInfo in soldiersList)
+            var soldiersList = soldiers.Select(soldier => new
             {
-                Console.WriteLine(soldierInfo + "\n");
-            }
+                FullName = soldier.FullName,
+                Rank = soldier.Rank
+            }).ToList();
+
+            soldiersList.ForEach(soldier => Console.WriteLine($"{soldier.FullName}\n" +
+                    $"{soldier.Rank}\n"));
         }
     }
 
@@ -116,7 +116,7 @@ namespace WeaponsReport
 
             for (int i = 0; i < count; i++)
             {
-                soldiers.Add(new Soldier(_names[random.Next(0,_names.Count)],
+                soldiers.Add(new Soldier(_names[random.Next(0, _names.Count)],
                     _weapons[random.Next(0, _weapons.Count)],
                     _ranks[random.Next(0, _ranks.Count)],
                     random.Next(0, maxServiceTerm)));
